@@ -7,16 +7,16 @@ const UPDATE_ITEM_REST_API_URL = 'http://localhost:9191/update';
 
 
 class ItemService {
-    getProducts(){
+    getItems(){
         return axios.get(ITEMS_REST_API_URL);
     }
-    deleteProduct(id){
+    deleteItems(id){
         return axios.delete(DELETE_ITEM_REST_API_URL + id);
     }
-    addProduct(productName){
+    addItems(productName){
         return axios.post(ADD_ITEM_REST_API_URL,{name:productName});
     }
-    editProduct(productID, productNameEdit){
+    editItems(productID, productNameEdit){
         return axios.put(UPDATE_ITEM_REST_API_URL,{id:productID,name:productNameEdit})
     }
 }

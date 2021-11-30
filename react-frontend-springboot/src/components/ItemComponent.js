@@ -23,7 +23,7 @@ class ItemComponent extends React.Component {
     }
 
     deleteHandler(id){
-        ProductService.deleteProduct(id).then(r => {
+        ProductService.deleteItems(id).then(r => {
             //HARD COPY OF STATE- SPREAD OPERATOR
             let tmpState = { ...this.state };
             //FILTER THE ID I WANT TO DELETE OUT
@@ -38,7 +38,7 @@ class ItemComponent extends React.Component {
     }
 
     addHandler(){
-        ProductService.addProduct(this.state.itemName).then(r  =>
+        ProductService.addItems(this.state.itemName).then(r  =>
                 this.setState(prevState => ({
                     items: [...prevState.items, r.data]
                 }))
@@ -47,7 +47,7 @@ class ItemComponent extends React.Component {
     }
 
     editHandler() {
-        ProductService.editProduct(this.state.itemID, this.state.itemNameEdit).then(r => {
+        ProductService.editItems(this.state.itemID, this.state.itemNameEdit).then(r => {
 
                 //HARD COPY OF STATE- SPREAD OPERATOR
                 let tmpStateEdit = {...this.state};
@@ -81,7 +81,7 @@ class ItemComponent extends React.Component {
     }
 
     componentDidMount(){
-        ProductService.getProducts().then(( response ) => {
+        ProductService.getItems().then(( response ) => {
             this.setState( { items: response.data})
         })
     }
@@ -90,37 +90,29 @@ class ItemComponent extends React.Component {
     render(){
         return(
         <div>
-            <h1 className = "text-center"> Actions List </h1>
-            <input type="button" value="Show Options" onClick={this.showOptionsHandler}/>
-            { this.state.showOptions ?
-            <table className="table table-striped">
-                <thead>
-                <tr>
-                    <td> Item ID</td>
-                    <td> Item Name</td>
-                    <td> Submit</td>
-                </tr>
-                </thead>
+            {/*<h1 className = "text-center"> Actions List </h1>*/}
+            {/*<input type="button" value="Show Options" onClick={this.showOptionsHandler}/>*/}
+            {/*{ this.state.showOptions ?*/}
+            {/*<table className="table table-striped">*/}
+            {/*    <thead>*/}
+            {/*    <tr>*/}
+            {/*        <td> Item ID</td>*/}
+            {/*        <td> Item Name</td>*/}
+            {/*        <td> Submit</td>*/}
+            {/*    </tr>*/}
+            {/*    </thead>*/}
 
-                <tbody>
-                <tr>
-                    <td> Null </td>
-                    <td><input type="text" name="itemName" onChange={this.changeHandler}/></td>
-                    <td><input type="button" value="Add Item" onClick={() => this.addHandler()}/></td>
-                </tr>
-                </tbody>
+            {/*    <tbody>*/}
 
-                <tbody>
-                <tr>
-                    <td><input type="text" name="itemID" onChange={this.changeHandler}/></td>
-                    <td><input type="text" name="itemNameEdit" onChange={this.changeHandler}/></td>
-                    <td><input type="button" value="Edit Item" onClick={() => this.editHandler()}/></td>
-                </tr>
-                </tbody>
-            </table> : null
-            }
+            {/*    </tbody>*/}
 
-            <h1 className = "text-center"> Products List </h1>
+            {/*    <tbody>*/}
+
+            {/*    </tbody>*/}
+            {/*</table> : null*/}
+            {/*}*/}
+
+            <h1 className = "text-center"> To-Do Items List </h1>
 
             <table className = "table table-striped">
                 <thead>
@@ -131,9 +123,18 @@ class ItemComponent extends React.Component {
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td> Null </td>
+                        <td><input type="text" name="itemName" onChange={this.changeHandler}/></td>
+                        <td><input type="button" value="Add Item" onClick={() => this.addHandler()}/></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="itemID" onChange={this.changeHandler}/></td>
+                        <td><input type="text" name="itemNameEdit" onChange={this.changeHandler}/></td>
+                        <td><input type="button" value="Edit Item" onClick={() => this.editHandler()}/></td>
+                    </tr>
                     {
-                        //Just added the .reverse so the items don't get to be on the bottom in real time
-                        this.state.items.reverse().map(
+                        this.state.items.map(
                             item =>
                             <tr key = {item.id}>
                                 <td> {item.id} </td>
@@ -143,7 +144,7 @@ class ItemComponent extends React.Component {
                         )
                     }
                 </tbody>
-                </table>
+            </table>
         </div>
         )
     }
