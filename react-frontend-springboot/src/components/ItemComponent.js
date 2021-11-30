@@ -49,8 +49,9 @@ class ItemComponent extends React.Component {
 
     }
 
-    editHandler(id) {
-        ItemService.editItems(id, this.state.itemNameEditID[id]).then(r => {
+    editHandler(id,checkbox) {
+
+        ItemService.editItems(id, this.state.itemNameEditID[id],checkbox).then(r => {
 
                 //HARD COPY OF STATE- SPREAD OPERATOR
                 let tmpStateEdit = {...this.state};
@@ -59,6 +60,29 @@ class ItemComponent extends React.Component {
                 const newObj = tmpStateEdit.items.map(element => {
                     if (element.id === r.data.id ) {
                         element.name = r.data.name;
+                        element.checkbox = r.data.checkbox;
+                    }
+
+                    return element
+                })
+
+                //UPDATES THE NEW PRODUCT
+                this.setState({ items: newObj});
+            }
+        )
+    }
+
+    //Modified the Checkbox only.
+    editCheckedHandler(e,id){
+        ItemService.editItemCheckbox(id, this.state.items.find((e)=> e.id === id).name, e.target.checked ? 1 : 0).then(r => {
+
+                //HARD COPY OF STATE- SPREAD OPERATOR
+                let tmpStateEdit = {...this.state};
+
+                //FILTER THE ID I WANT TO UPDATE
+                const newObj = tmpStateEdit.items.map(element => {
+                    if (element.id === r.data.id ) {
+                        element.checkbox = r.data.checkbox;
                     }
                     return element
                 })
@@ -67,6 +91,7 @@ class ItemComponent extends React.Component {
                 this.setState({ items: newObj});
             }
         )
+
     }
 
     //Handler for showing or not some information
@@ -148,12 +173,12 @@ class ItemComponent extends React.Component {
                         this.state.items.map(
                             item =>
                             <tr key = {item.id}>
-                                <td> <input type="checkbox" /> </td>
+                                <td> <input type="checkbox" checked={item.checkbox} onChange={(e) => this.editCheckedHandler(e,item.id)}/> </td>
                                 <td> {item.id} </td>
                                 <td> {item.name} </td>
                                 <td> <input type="button" value="Delete" onClick={() => this.deleteHandler(item.id)}/>  </td>
                                 <td><input type="text" name="itemNameEditID" onChange={(e) => this.changeHandlerID(e,item.id)}/></td>
-                                <td> <input type="button" value="Update" onClick={() => this.editHandler(item.id)}/>  </td>
+                                <td> <input type="button" value="Update" onClick={() => this.editHandler(item.id,0)}/>  </td>
                             </tr>
                         )
                     }

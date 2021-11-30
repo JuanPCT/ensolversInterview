@@ -38,6 +38,7 @@ public class ItemService {
     public Item updateItem(Item item){
         Item existingItem = repository.findById(item.getId()).orElse(null);
         existingItem.setName(item.getName());
+        existingItem.setCheckbox(item.getCheckbox());
         return repository.save(existingItem);
     }
 

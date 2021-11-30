@@ -16,8 +16,11 @@ class ItemService {
     addItems(itemName){
         return axios.post(ADD_ITEM_REST_API_URL,{name:itemName});
     }
-    editItems(itemID, itemNameEditID){
-        return axios.put(UPDATE_ITEM_REST_API_URL,{id:itemID,name:itemNameEditID})
+    editItems(itemID, itemNameEditID,checkbox){
+        return axios.put(UPDATE_ITEM_REST_API_URL,{id:itemID,name:itemNameEditID,checkbox:checkbox})
+    }
+    editItemCheckbox(itemID, itemNameEditID,checkbox){
+        return axios.put(UPDATE_ITEM_REST_API_URL,{id:itemID,name:itemNameEditID,checkbox:checkbox})
     }
 }
 

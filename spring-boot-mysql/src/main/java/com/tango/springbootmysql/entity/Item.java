@@ -20,4 +20,6 @@ public class Item {
     @GeneratedValue
     private int id;
     private String name;
+    private int checkbox;
+
 }
