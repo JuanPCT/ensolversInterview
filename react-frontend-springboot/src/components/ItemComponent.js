@@ -15,9 +15,12 @@ class ItemComponent extends React.Component {
             itemID:"",
             itemNameEdit:"",
 
+            itemNameEditID:[],
+
         }
         this.deleteHandler = this.deleteHandler.bind(this);
         this.changeHandler = this.changeHandler.bind(this);
+        this.changeHandlerID = this.changeHandlerID.bind(this);
         this.addHandler = this.addHandler.bind(this);
         this.showOptionsHandler = this.showOptionsHandler.bind(this);
     }
@@ -46,8 +49,8 @@ class ItemComponent extends React.Component {
 
     }
 
-    editHandler() {
-        ItemService.editItems(this.state.itemID, this.state.itemNameEdit).then(r => {
+    editHandler(id) {
+        ItemService.editItems(id, this.state.itemNameEditID[id]).then(r => {
 
                 //HARD COPY OF STATE- SPREAD OPERATOR
                 let tmpStateEdit = {...this.state};
@@ -56,8 +59,6 @@ class ItemComponent extends React.Component {
                 const newObj = tmpStateEdit.items.map(element => {
                     if (element.id === r.data.id ) {
                         element.name = r.data.name;
-                        element.quantity = r.data.quantity;
-                        element.price = r.data.price;
                     }
                     return element
                 })
@@ -77,7 +78,16 @@ class ItemComponent extends React.Component {
     //Change the state as you type
     changeHandler(e){
         this.setState({[e.target.name]:e.target.value});
+        console.log(e.target.name);
         //console.log(this.state[e.target.name]); //Debug with the variable
+    }
+
+    changeHandlerID(e,id){
+        const list = this.state.itemNameEditID.slice();
+        list[id] = e.target.value;
+        this.setState({itemNameEditID:list})
+        //console.log(this.state.itemNameEditID[id]);
+
     }
 
     componentDidMount(){
@@ -119,7 +129,9 @@ class ItemComponent extends React.Component {
                     <tr>
                         <td> Item ID </td>
                         <td> Item Name </td>
-                        <td> Actions </td>
+                        <td> Create / Delete </td>
+                        <td> Insert Text </td>
+                        <td> Update </td>
                     </tr>
                 </thead>
                 <tbody>
@@ -127,11 +139,8 @@ class ItemComponent extends React.Component {
                         <td> Null </td>
                         <td><input type="text" name="itemName" onChange={this.changeHandler}/></td>
                         <td><input type="button" value="Add Item" onClick={() => this.addHandler()}/></td>
-                    </tr>
-                    <tr>
-                        <td><input type="text" name="itemID" onChange={this.changeHandler}/></td>
-                        <td><input type="text" name="itemNameEdit" onChange={this.changeHandler}/></td>
-                        <td><input type="button" value="Edit Item" onClick={() => this.editHandler()}/></td>
+                        <td> Null </td>
+                        <td> Null </td>
                     </tr>
                     {
                         this.state.items.map(
@@ -140,6 +149,8 @@ class ItemComponent extends React.Component {
                                 <td> {item.id} </td>
                                 <td> {item.name} </td>
                                 <td> <input type="button" value="Delete" onClick={() => this.deleteHandler(item.id)}/>  </td>
+                                <td><input type="text" name="itemNameEditID" onChange={(e) => this.changeHandlerID(e,item.id)}/></td>
+                                <td> <input type="button" value="Update" onClick={() => this.editHandler(item.id)}/>  </td>
                             </tr>
                         )
                     }
