@@ -13,11 +13,11 @@ class ItemService {
     deleteItems(id){
         return axios.delete(DELETE_ITEM_REST_API_URL + id);
     }
-    addItems(productName){
-        return axios.post(ADD_ITEM_REST_API_URL,{name:productName});
+    addItems(itemName){
+        return axios.post(ADD_ITEM_REST_API_URL,{name:itemName});
     }
-    editItems(productID, productNameEdit){
-        return axios.put(UPDATE_ITEM_REST_API_URL,{id:productID,name:productNameEdit})
+    editItems(itemID, itemNameEdit){
+        return axios.put(UPDATE_ITEM_REST_API_URL,{id:itemID,name:itemNameEdit})
     }
 }
 

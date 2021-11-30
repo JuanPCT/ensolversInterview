@@ -1,5 +1,5 @@
 import React from 'react';
-import ProductService from '../services/ItemService'
+import ItemService from "../services/ItemService";
 
 class ItemComponent extends React.Component {
 
@@ -23,7 +23,7 @@ class ItemComponent extends React.Component {
     }
 
     deleteHandler(id){
-        ProductService.deleteItems(id).then(r => {
+        ItemService.deleteItems(id).then(r => {
             //HARD COPY OF STATE- SPREAD OPERATOR
             let tmpState = { ...this.state };
             //FILTER THE ID I WANT TO DELETE OUT
@@ -38,7 +38,7 @@ class ItemComponent extends React.Component {
     }
 
     addHandler(){
-        ProductService.addItems(this.state.itemName).then(r  =>
+        ItemService.addItems(this.state.itemName).then(r  =>
                 this.setState(prevState => ({
                     items: [...prevState.items, r.data]
                 }))
@@ -47,7 +47,7 @@ class ItemComponent extends React.Component {
     }
 
     editHandler() {
-        ProductService.editItems(this.state.itemID, this.state.itemNameEdit).then(r => {
+        ItemService.editItems(this.state.itemID, this.state.itemNameEdit).then(r => {
 
                 //HARD COPY OF STATE- SPREAD OPERATOR
                 let tmpStateEdit = {...this.state};
@@ -81,7 +81,7 @@ class ItemComponent extends React.Component {
     }
 
     componentDidMount(){
-        ProductService.getItems().then(( response ) => {
+        ItemService.getItems().then(( response ) => {
             this.setState( { items: response.data})
         })
     }
