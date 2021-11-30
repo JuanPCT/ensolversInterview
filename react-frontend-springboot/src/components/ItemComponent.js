@@ -69,19 +69,19 @@ class ItemComponent extends React.Component {
         )
     }
 
-
+    //Handler for showing or not some information
     showOptionsHandler(){
         this.setState({showOptions:!this.state.showOptions});
-
     }
 
-    //Change the state as you type
+    //Change Handler for New Items
     changeHandler(e){
         this.setState({[e.target.name]:e.target.value});
         console.log(e.target.name);
         //console.log(this.state[e.target.name]); //Debug with the variable
     }
 
+    //Change Handler for Existing Items
     changeHandlerID(e,id){
         const list = this.state.itemNameEditID.slice();
         list[id] = e.target.value;
@@ -127,25 +127,28 @@ class ItemComponent extends React.Component {
             <table className = "table table-striped">
                 <thead>
                     <tr>
+                        <td> Checkbox </td>
                         <td> Item ID </td>
                         <td> Item Name </td>
-                        <td> Create / Delete </td>
-                        <td> Insert Text </td>
-                        <td> Update </td>
+                        <td> Delete </td>
+                        <td> Insert Name </td>
+                        <td> Update / Create </td>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td> Null </td>
-                        <td><input type="text" name="itemName" onChange={this.changeHandler}/></td>
-                        <td><input type="button" value="Add Item" onClick={() => this.addHandler()}/></td>
+                        <td> TBD </td>
+                        <td> TBD </td>
                         <td> Null </td>
-                        <td> Null </td>
+                        <td> <input type="text" name="itemName" onChange={this.changeHandler}/> </td>
+                        <td> <input type="button" value="Add Item" onClick={() => this.addHandler()}/> </td>
                     </tr>
                     {
                         this.state.items.map(
                             item =>
                             <tr key = {item.id}>
+                                <td> <input type="checkbox" /> </td>
                                 <td> {item.id} </td>
                                 <td> {item.name} </td>
                                 <td> <input type="button" value="Delete" onClick={() => this.deleteHandler(item.id)}/>  </td>
