@@ -1,5 +1,6 @@
 import React from 'react';
 import ItemService from "../services/ItemService";
+import FolderService from "../services/FolderService";
 
 class ItemComponent extends React.Component {
 
@@ -8,7 +9,10 @@ class ItemComponent extends React.Component {
         this.state = {
             items:[],
 
-            itemName:"",
+            folders:[],
+
+            itemNameID:[],
+            folderName:"",
 
             showOptions:false,
 
@@ -19,39 +23,78 @@ class ItemComponent extends React.Component {
 
         }
         this.deleteHandler = this.deleteHandler.bind(this);
+        this.deleteHandlerFolder = this.deleteHandlerFolder.bind(this);
         this.changeHandler = this.changeHandler.bind(this);
         this.changeHandlerID = this.changeHandlerID.bind(this);
         this.addHandler = this.addHandler.bind(this);
         this.showOptionsHandler = this.showOptionsHandler.bind(this);
     }
 
-    deleteHandler(id){
+    deleteHandler(id,idFolder){
         ItemService.deleteItems(id).then(r => {
             //HARD COPY OF STATE- SPREAD OPERATOR
             let tmpState = { ...this.state };
             //FILTER THE ID I WANT TO DELETE OUT
-            const newObj = tmpState.items.filter(element => {
+
+            // console.log(tmpState.folders.find((e)=> e.id === idFolder).items);
+            tmpState.folders.find((e)=> e.id === idFolder).items = tmpState.folders.find((e) => e.id === idFolder).items.filter(element => {
                 return element.id !== id;
-            })
+            });  //Delete Item from the Folder
             //SETS THE NEW STATE WITHOUT THE ID I DELETED
-            this.setState({items:newObj});
+            this.setState({folders:tmpState.folders});
             alert(r.data);
         });
 
     }
 
-    addHandler(){
-        ItemService.addItems(this.state.itemName).then(r  =>
+    deleteHandlerFolder(id){
+        FolderService.deleteFolders(id).then(r => {
+            //HARD COPY OF STATE- SPREAD OPERATOR
+            let tmpState = { ...this.state };
+            //FILTER THE ID I WANT TO DELETE OUT
+            const newObj = tmpState.folders.filter(element => {
+                return element.id !== id;
+            })
+            //SETS THE NEW STATE WITHOUT THE ID I DELETED
+            this.setState({folders:newObj});
+            alert(r.data);
+
+        })
+    }
+
+    addHandler(idFolder){
+        ItemService.addItems(this.state.itemNameID[idFolder]).then(r  => {
+                FolderService.editFolders(idFolder, [r.data]).then(r => {
+                    let tmpState = { ...this.state };
+                    tmpState.folders.find((e)=> e.id === idFolder).items = r.data.items;
+                    this.setState({folders:tmpState.folders});
+                })
                 this.setState(prevState => ({
                     items: [...prevState.items, r.data]
-                }))
+            }))
+
+            }
+        )
+    }
+
+    addHandlerFolder(){
+        FolderService.addFolders(this.state.folderName).then(r  =>
+            this.setState(prevState => ({
+                folders: [...prevState.folders, r.data]
+            }))
         )
 
     }
 
-    editHandler(id,checkbox) {
+
+
+    editHandler(idFolder,id,checkbox) {
 
         ItemService.editItems(id, this.state.itemNameEditID[id],checkbox).then(r => {
+
+                FolderService.getFolders().then( (r) => {
+                    this.setState({ folders: r.data})
+                })
 
                 //HARD COPY OF STATE- SPREAD OPERATOR
                 let tmpStateEdit = {...this.state};
@@ -62,7 +105,6 @@ class ItemComponent extends React.Component {
                         element.name = r.data.name;
                         element.checkbox = r.data.checkbox;
                     }
-
                     return element
                 })
 
@@ -108,9 +150,9 @@ class ItemComponent extends React.Component {
 
     //Change Handler for Existing Items
     changeHandlerID(e,id){
-        const list = this.state.itemNameEditID.slice();
+        const list = this.state[e.target.name].slice();
         list[id] = e.target.value;
-        this.setState({itemNameEditID:list})
+        this.setState({[e.target.name]:list})
         //console.log(this.state.itemNameEditID[id]);
 
     }
@@ -119,34 +161,15 @@ class ItemComponent extends React.Component {
         ItemService.getItems().then(( response ) => {
             this.setState( { items: response.data})
         })
+        FolderService.getFolders().then( (r) => {
+            this.setState({ folders: r.data})
+        })
     }
 
 
     render(){
         return(
         <div>
-            {/*<h1 className = "text-center"> Actions List </h1>*/}
-            {/*<input type="button" value="Show Options" onClick={this.showOptionsHandler}/>*/}
-            {/*{ this.state.showOptions ?*/}
-            {/*<table className="table table-striped">*/}
-            {/*    <thead>*/}
-            {/*    <tr>*/}
-            {/*        <td> Item ID</td>*/}
-            {/*        <td> Item Name</td>*/}
-            {/*        <td> Submit</td>*/}
-            {/*    </tr>*/}
-            {/*    </thead>*/}
-
-            {/*    <tbody>*/}
-
-            {/*    </tbody>*/}
-
-            {/*    <tbody>*/}
-
-            {/*    </tbody>*/}
-            {/*</table> : null*/}
-            {/*}*/}
-
             <h1 className = "text-center"> To-Do Items List </h1>
 
             <table className = "table table-striped">
@@ -155,9 +178,8 @@ class ItemComponent extends React.Component {
                         <td> Checkbox </td>
                         <td> Item ID </td>
                         <td> Item Name </td>
-                        <td> Delete </td>
                         <td> Insert Name </td>
-                        <td> Update / Create </td>
+                        <td> Create </td>
                     </tr>
                 </thead>
                 <tbody>
@@ -165,24 +187,54 @@ class ItemComponent extends React.Component {
                         <td> Null </td>
                         <td> TBD </td>
                         <td> TBD </td>
-                        <td> Null </td>
-                        <td> <input type="text" name="itemName" onChange={this.changeHandler}/> </td>
-                        <td> <input type="button" value="Add Item" onClick={() => this.addHandler()}/> </td>
+
+                        <td> <input type="text" name="folderName" onChange={this.changeHandler}/> </td>
+                        <td> <input type="button" value="Add Folder" onClick={() => this.addHandlerFolder()}/> </td>
                     </tr>
-                    {
-                        this.state.items.map(
-                            item =>
-                            <tr key = {item.id}>
-                                <td> <input type="checkbox" checked={item.checkbox} onChange={(e) => this.editCheckedHandler(e,item.id)}/> </td>
-                                <td> {item.id} </td>
-                                <td> {item.name} </td>
-                                <td> <input type="button" value="Delete" onClick={() => this.deleteHandler(item.id)}/>  </td>
-                                <td><input type="text" name="itemNameEditID" onChange={(e) => this.changeHandlerID(e,item.id)}/></td>
-                                <td> <input type="button" value="Update" onClick={() => this.editHandler(item.id,0)}/>  </td>
-                            </tr>
-                        )
-                    }
+
                 </tbody>
+            </table>
+            <br/>
+            <table className = "table table-striped">
+                <thead>
+                <tr>
+                    <td> Folder ID </td>
+                    <td> Folder Name </td>
+                    <td> Delete </td>
+                    <td> Item name: </td>
+                    <td> Add </td>
+                    <td> Items </td>
+
+                </tr>
+                </thead>
+                <tbody>
+                {
+                    this.state.folders.map(
+                        folder =>
+                            <tr key={folder.id}>
+                                <td> {folder.id}</td>
+                                <td> {folder.name} </td>
+                                <td> <input type="button" value="Delete" onClick={() => this.deleteHandlerFolder(folder.id)}/>  </td>
+                                <td> <input type="text" name="itemNameID" onChange={(e)=> this.changeHandlerID(e,folder.id)}/> </td>
+                                <td> <input type="button" value="Add Item" onClick={() => this.addHandler(folder.id)}/> </td>
+                                <td> {folder.items.map(
+                                    item =>
+                                        <tr key = {item.id}>
+                                            <td> <input type="checkbox" defaultChecked={item.checkbox} onChange={(e) => this.editCheckedHandler(e,item.id)}/> </td>
+                                            <td> {item.id} </td>
+                                            <td> {item.name} </td>
+                                            <td> <input type="button" value="Delete" onClick={() => this.deleteHandler(item.id,folder.id)}/>  </td>
+                                            <td> <input type="text" name="itemNameEditID" onChange={(e) => this.changeHandlerID(e,item.id)}/> </td>
+                                            <td> <input type="button" value="Update" onClick={() => this.editHandler(folder.id,item.id,0)}/>  </td>
+                                        </tr>
+
+                                )} </td>
+
+                            </tr>
+                    )
+                }
+                </tbody>
+
             </table>
         </div>
         )

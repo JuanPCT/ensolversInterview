@@ -11,6 +11,8 @@ import java.util.List;
 @RestController
 public class ItemController {
 
+    //The @Autowired annotation makes the springboot compiler create an object
+    // that implements the ItemService interface
     @Autowired
     private ItemService service;
 

@@ -1,15 +1,12 @@
 TO-DO
 
-- Script allowing to run the app.
-- This command should set up everything that is required to run the app like, for instance, setting up a DB schema,
-  pre-creating any config file, etc.
-
-- describing all the runtimes, engines, tools etc. required to run the
-  app, with their concrete versions - for instance, MySQL 5.7, Spring Boot 2.1, React 16.10, etc. 
+- Folders
+- Fixed a bug where when Updating an Item the server returns code 500
+- However, when Adding an Item, it works (same Endpoint)
 
 **Introduction**
 - This Web Page was developed using Spring Tools for backend + React.js for frontend.
-- It's an SPA that provides CRUD operations.\
+- It's an SPA that provides CRUD operations.
 - The backend provides a REST API that is used by the FrontEnd.
 - So far, the backend was separated in layers _repository/service/controller_
 
@@ -24,3 +21,4 @@ TO-DO
     - Also, you need root to have 'password' as password
     - ALTER USER 'root'@'localhost' IDENTIFIED BY 'password';
 - Lombok is used to minimize/remove the boilerplate code
+- curl 7.68.0 (Only for the script)
