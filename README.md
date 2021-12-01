@@ -1,8 +1,6 @@
 TO-DO
 
-- Folders
-- Fixed a bug where when Updating an Item the server returns code 500
-- However, when Adding an Item, it works (same Endpoint)
+- <tr> cannot appear as a child of <td>. FrontEnd (Just a Warning tho)
 
 **Introduction**
 - This Web Page was developed using Spring Tools for backend + React.js for frontend.

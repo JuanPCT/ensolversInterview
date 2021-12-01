@@ -217,8 +217,10 @@ class ItemComponent extends React.Component {
                                 <td> <input type="button" value="Delete" onClick={() => this.deleteHandlerFolder(folder.id)}/>  </td>
                                 <td> <input type="text" name="itemNameID" onChange={(e)=> this.changeHandlerID(e,folder.id)}/> </td>
                                 <td> <input type="button" value="Add Item" onClick={() => this.addHandler(folder.id)}/> </td>
-                                <td> {folder.items.map(
+
+                                <td><table><thead>{folder.items.map(
                                     item =>
+
                                         <tr key = {item.id}>
                                             <td> <input type="checkbox" defaultChecked={item.checkbox} onChange={(e) => this.editCheckedHandler(e,item.id)}/> </td>
                                             <td> {item.id} </td>
@@ -228,7 +230,8 @@ class ItemComponent extends React.Component {
                                             <td> <input type="button" value="Update" onClick={() => this.editHandler(folder.id,item.id,0)}/>  </td>
                                         </tr>
 
-                                )} </td>
+
+                                )}</thead></table></td>
 
                             </tr>
                     )
