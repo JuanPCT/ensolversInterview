@@ -1,0 +1,27 @@
+[
+  {
+    "name":"Testing 1",
+    "checkbox":1
+  },
+
+  {
+    "name":"Testing 2",
+    "checkbox":0
+  },
+
+  {
+    "name":"Testing 3",
+    "checkbox":1
+  },
+
+  {
+    "name":"Testing 4",
+    "checkbox":0
+  },
+
+  {
+    "name":"Testing 5",
+    "checkbox":1
+  }
+
+]
